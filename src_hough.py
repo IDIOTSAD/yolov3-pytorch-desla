@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu May 12 05:13:00 2022
-
-@author: Milly
-"""
-
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
@@ -47,7 +40,12 @@ obj_id = -1
 box_width = 0
 box_height = 0
 
-bbox_threshold = "정해야 함"
+box_xmin = 0
+box_xmax = 0
+box_ymin = 0
+box_ymax = 0
+
+bbox_threshold = 3000
 
 Stopped = False # 정지, 횡단보도 표지판이 있을 때 멈췄다가 5초뒤 출발해야 함.
                 # 5초간 정지했으면 이미지에 해당 표지판이 있더라도 무시하고 주행해야함.
@@ -63,18 +61,39 @@ int16 id
 '''
 
 def box_callback(data):
-    global obj_id, Stopped
+    global obj_id, Stopped, curr_box_width, curr_box_height, box_width, box_height, bbox_threshold, box_xmin, box_xmax, box_ymin,box_ymax
     for bbox in data.bounding_boxes:
         curr_box_width = bbox.xmax-bbox.xmin
         curr_box_height = bbox.ymax=bbox.ymin
         if (curr_box_width*curr_box_height > bbox_threshold) and (curr_box_width*curr_box_height > box_width*box_height):
+            box_width = curr_box_width
+            box_height = curr_box_height
             obj_id = bbox.id
-
+            box_xmin = bbox.xmin
+            box_xmax = bbox.xmax
+            box_ymin = bbox.ymin
+            box_ymax = bbox.ymax
+            
     #멈춰야하는 표지판을 지난 후, 다시 정지표시판 만났을 때를 위해 변경
     if (Stopped and (obj_id not in [2,4])) :
         Stopped = False
-        
+
+def isRED(img):
+    global box_xmin,box_xmax,box_ymin, box_ymax, y_min, y_max, x_min, x_max
     
+    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    gray = cv2.inRange(gray,150,255)
+    roi = gray[y_min:y_max,x_min:x_max]
+    
+    count = 0
+    for i in roi[roi.shape[0]/2:,roi.shape[1]/2] :
+        if count > 20 :
+            return True
+        if i==255 :
+            count += 1
+    return False
+    
+
 def PID_control(error) :
     global Kp, Kd, Ki
     global p_error, d_error, i_error
@@ -260,11 +279,11 @@ def start():
             continue
         
         #라벨링은 신호등으로 통일 되어있는데, 초록색, 빨강색으로 분리해야할듯
-        '''
-        if traffic_red:
+        
+        if obj_id == 3 and isRED(frame):
             drive(angle,0)
             continue
-        '''    
+            
         # 정지, 횡단보도 만나면 그대로 6초간 정지
         if (not Stopped) and (obj_id in [2,4]) :
             drive(angle,0)
