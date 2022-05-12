@@ -51,7 +51,7 @@ Stopped = False # 정지, 횡단보도 표지판이 있을 때 멈췄다가 5초
 
 def box_callback(data):
     global obj_id, Stopped, curr_box_width, curr_box_height, box_width, box_height, bbox_threshold, box_xmin, box_xmax, box_ymin,box_ymax
-    obj_id = -1 # 검출 실패
+    obj_id = -1 # 검출 실패 
     for bbox in data.bounding_boxes:
         curr_box_width = bbox.xmax-bbox.xmin
         curr_box_height = bbox.ymax-bbox.ymin
@@ -114,7 +114,7 @@ def divide_left_right(lines):
         else:
             slope = float(y2 - y1) / float(x2 - x1)
 
-        #차선이 아닌 직선 필터링 (ex.수평선)
+		#차선이 아닌 직선 필터링 (ex.수평선)
         if abs(slope) > min_slope_threshold and abs(slope) < max_slope_threshold:
             slopes.append(slope)
             new_lines.append(line[0])
@@ -146,7 +146,7 @@ def isRED(img):
         if i==255 :
             count += 1
     return False
-# 차선의 대표 직선을 찾고, 기울기, 절편을 반환
+# 차선의 대표 직선을 찾고, 기울기, 절편을 반환   
 def get_line_params(lines):
     # sum of x, y, m
     x_sum = 0.0
@@ -183,7 +183,7 @@ def get_line_pos(img, lines, left=False, right=False):
         if right:
             pos = Width + 1
     else:
-        y = Gap / 2
+        y = Gap / 2 
         pos = (y - b) / m
 
     return int(pos)
@@ -193,7 +193,7 @@ def process_image(frame):
 
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    norm = cv2.normalize(gray,None,0,255,cv2.NORM_MINMAX)
+    norm = cv2.normalize(gray,None,0,255,cv2.NORM_MINMAX)        
     blur_gray = cv2.GaussianBlur(norm, (5, 5), 0)
         
     edge_img = cv2.Canny(np.uint8(blur_gray), 140, 70)
@@ -225,11 +225,11 @@ def drive(Angle, Speed):
     #제어 안정성을 높이기 위해 천천히 가속
     if Speed != -10:
         if Speed < Purpose_speed:
-            Speed += 1
+            Speed += 1 
         else:
             Speed = Purpose_speed
     
-    #곡선 주행시 차선을 이탈하지 않도록 각도에 비례해 감속
+	#곡선 주행시 차선을 이탈하지 않도록 각도에 비례해 감속            
     if abs(Angle) > 20 and Speed != -10:
         msg.speed = (Speed -(0.17 * abs(Angle)))
     else:
@@ -239,13 +239,13 @@ def drive(Angle, Speed):
 
 # 차선 잃을시 멈췄다 후진
 
-####################
+####################       
 ### 5초간 정지 함수 ###
 ####################
 
 # TickMeter()를 이용하여 시간을 측정
 # 정지를 시작한 시간을 time_ex에 저장
-# time_now 에 현재 시간 저장
+# time_now 에 현재 시간 저장 
 # 두 시간의 차이가 5초보다 커질때까지 계속 반복
 
 def stop():
@@ -287,22 +287,22 @@ def start():
         while not frame.size == (Width*Height*3) :
             continue
         
-        # 시간 측정
+        # 시간 측정        
         tm.stop()
         time_now = tm.getTimeSec()
         tm.start()
         
-        #신호등 & 정지 & 횡단보도
+        #신호등 & 정지 & 횡단보도 
         if (obj_id == 3 and isRED(frame)) or ((not Stopped) and (obj_id in [2,4])):
             stop()
             continue
         
         lpos, rpos = process_image(frame)
         
-        # 차선 1개라도 검출 못 할시 표지판 인식
+        # 차선 1개라도 검출 못 할시 표지판 인식 
         if rpos == Width +1 or lpos == -1:
             
-            # 표지판 x or ignore일시
+            # 표지판 x or ignore일시 
             if obj_id == -1:
                 lpos = prev_l
                 rpos = prev_r
@@ -314,19 +314,19 @@ def start():
             
             # 우회전
             elif obj_id == 1:
-                lpos = rpos - 440
+                lpos = rpos - 440 
                 rpos = prev_r
             
         
-        #도로 내부에 다른 물체때문에 오검출 되었을 경우 처리
+		#도로 내부에 다른 물체때문에 오검출 되었을 경우 처리
         else:
             if rpos - lpos < 430:
                 if abs(rpos-prev_rpos) < 100:
-                    lpos = rpos - 450
+                    lpos = rpos - 450 
                 if abs(lpos-prev_lpos) < 100:
-                    rpos = lpos + 450
+                    rpos = lpos + 450 
         
-        center = (lpos + rpos) / 2
+        center = (lpos + rpos) / 2 
         error = (center - (Width / 2))
 
         angle = PID_control(error)
