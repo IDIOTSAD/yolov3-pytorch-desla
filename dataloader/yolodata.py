@@ -14,8 +14,8 @@ class Yolodata(Dataset):
     file_txt = ""
     train_dir = "C:\\Users\\leego\\Desktop\\yolov3-pytorch-desla\\trainDataList"
     train_txt = "train.txt"
-    valid_dir = "C:\\Users\\leego\\Desktop\\yolov3-pytorch-desla\\trainDataList"
-    valid_txt = "train.txt"
+    valid_dir = "C:\\Users\\leego\\Desktop\\yolov3-pytorch-desla\\evalDataList"
+    valid_txt = "eval.txt"
     class_str = ['left', 'right', 'stop', 'crosswalk', 'uturn', 'traffic_light']
     num_class = None
     img_data = []
