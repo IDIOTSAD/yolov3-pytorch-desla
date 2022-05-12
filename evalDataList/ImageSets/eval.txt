@@ -1,4 +1,3 @@
-map1_1
 map1_10
 map1_100
 map1_11
@@ -10,7 +9,6 @@ map1_16
 map1_17
 map1_18
 map1_19
-map1_2
 map1_20
 map1_21
 map1_22
@@ -21,7 +19,6 @@ map1_26
 map1_27
 map1_28
 map1_29
-map1_3
 map1_30
 map1_31
 map1_32
@@ -32,7 +29,6 @@ map1_36
 map1_37
 map1_38
 map1_39
-map1_4
 map1_40
 map1_41
 map1_42
@@ -43,7 +39,6 @@ map1_46
 map1_47
 map1_48
 map1_49
-map1_5
 map1_50
 map1_51
 map1_52
@@ -54,7 +49,6 @@ map1_56
 map1_57
 map1_58
 map1_59
-map1_6
 map1_60
 map1_61
 map1_62
@@ -65,7 +59,6 @@ map1_66
 map1_67
 map1_68
 map1_69
-map1_7
 map1_70
 map1_71
 map1_72
@@ -76,7 +69,6 @@ map1_76
 map1_77
 map1_78
 map1_79
-map1_8
 map1_80
 map1_81
 map1_82
