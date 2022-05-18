@@ -12,11 +12,11 @@ class Yolodata(Dataset):
     file_dir = ""
     anno_dir = ""
     file_txt = ""
-    train_dir = "C:\\Users\\leego\\Desktop\\yolov3-pytorch-desla\\trainDataList"
+    train_dir = "C:\\Users\\leego\\Desktop\\yolov3-pytorch-desla\\table_trainDataList"
     train_txt = "train.txt"
-    valid_dir = "C:\\Users\\leego\\Desktop\\yolov3-pytorch-desla\\evalDataList"
-    valid_txt = "eval.txt"
-    class_str = ['left', 'right', 'stop', 'crosswalk', 'uturn', 'traffic_light']
+    valid_dir = "C:\\Users\\leego\\Desktop\\yolov3-pytorch-desla\\table_trainDataList"
+    valid_txt = "train.txt"
+    class_str = ['white', 'yellow']
     num_class = None
     img_data = []
     def __init__(self, is_train=True, transform=None, cfg_param=None):
